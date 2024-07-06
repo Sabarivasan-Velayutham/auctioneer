@@ -16,8 +16,6 @@ These instructions will get you a copy of the project up and running on your loc
 
   1. Clone the repository
 
-    $ git clone https://github.com/OverloadedSam/auctioneer.git
-
   2. Go to `client` and `server` directory one by one and install dependencies with command shown at 3rd step.
 
     $ cd client/
