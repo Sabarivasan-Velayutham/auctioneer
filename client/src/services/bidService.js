@@ -1,59 +1,35 @@
 /**
- * Bid Service for Auctioneer
+ * Bid Service - Places bids on auctions
+ * Consumes: POST /api/auctions/{id}/bid from backend-api-service
  * 
- * This file consumes the POST /api/auctions/{id}/bid endpoint from backend-api-service
- * When the backend adds a required paymentMethod parameter, this consumer will be affected
- * 
- * API Endpoint: /api/auctions/{id}/bid
+ * This file makes auctioneer a consumer of the bid endpoint.
+ * When backend adds required paymentMethod parameter, this will be detected as affected.
  */
 
 const API_BASE_URL = import.meta.env.VITE_BASE_API_URL || 'http://localhost:8000/api';
 
 /**
  * Place a bid on an auction
- * @param {string} auctionId - The auction ID  
- * @param {object} bidData - Bid data { bidAmount, bidderId }
- * @returns {Promise} Response from API
+ * @param {string} auctionId - The auction ID
+ * @param {object} bidData - { bidAmount, bidderId }
  */
 export const placeBid = async (auctionId, bidData) => {
-  try {
-    // Call to POST /api/auctions/{id}/bid endpoint
-    // This will be detected by CodePulse AI as a consumer
-    const response = await fetch(`${API_BASE_URL}/auctions/${auctionId}/bid`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        bidAmount: bidData.bidAmount,
-        bidderId: bidData.bidderId,
-        // NOTE: After breaking change in backend-api-service,
-        // this will need to include paymentMethod as query parameter
-      })
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Failed to place bid: ${response.statusText}`);
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error('Error placing bid:', error);
-    throw error;
-  }
-};
-
-// Alternative using axios (if auctioneer uses axios)
-import axios from 'axios';
-
-export const placeBidWithAxios = async (auctionId, bidData) => {
-  // This axios.post call will also be detected
-  return await axios.post(
-    `${API_BASE_URL}/auctions/${auctionId}/bid`,
-    {
+  // This fetch call contains the API path /api/auctions/{id}/bid
+  // CodePulse AI will detect this as a consumer
+  const response = await fetch(`${API_BASE_URL}/auctions/${auctionId}/bid`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
       bidAmount: bidData.bidAmount,
       bidderId: bidData.bidderId,
-    }
-  );
+    })
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to place bid: ${response.statusText}`);
+  }
+  
+  return await response.json();
 };
-
